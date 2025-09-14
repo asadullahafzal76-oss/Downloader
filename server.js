@@ -1,3 +1,4 @@
+const ffmpegPath = require("ffmpeg-static");
 const express = require("express");
 const cors = require("cors");
 const { exec } = require("child_process");
@@ -15,10 +16,11 @@ app.post("/yt-download", (req, res) => {
   const fileName = `download.${format === "mp3" ? "mp3" : "mp4"}`;
   const filePath = path.join(__dirname, fileName);
 
-  const command =
-    format === "mp3"
-      ? `yt-dlp -x --audio-format mp3 -o "${filePath}" "${url}"`
-      : `yt-dlp -f best -o "${filePath}" "${url}"`;
+const command =
+  format === "mp3"
+    ? `yt-dlp -x --audio-format mp3 --ffmpeg-location "${ffmpegPath}" -o "${filePath}" "${url}"`
+    : `yt-dlp -f best --ffmpeg-location "${ffmpegPath}" -o "${filePath}" "${url}"`;
+
 
   exec(command, (err) => {
     if (err) {
